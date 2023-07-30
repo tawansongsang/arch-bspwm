@@ -1,0 +1,4 @@
+#!/bin/bash
+
+date +"%a %d/%m/%Y %R:%S"
+
