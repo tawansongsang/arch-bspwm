@@ -1,0 +1,11 @@
+#!/bin/bash
+
+AUDIO_STATUS=$(amixer get Master | rg 'Front Left:' | awk -F '[][]+' '{ print $4 }')
+
+
+if [[ $AUDIO_STATUS == "on" ]]; then
+    amixer set Master mute
+elif [[ $AUDIO_STATUS == "off" ]]; then
+    amixer set Master unmute
+fi
+

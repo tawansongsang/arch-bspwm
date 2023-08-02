@@ -1,0 +1,11 @@
+#!/bin/bash
+
+AUDIO_STATUS=$(amixer get Capture | rg 'Front Left:' | awk -F '[][]+' '{ print $4 }')
+
+
+if [[ $AUDIO_STATUS == "on" ]]; then
+    echo 󰍬
+elif [[ $AUDIO_STATUS == "off" ]]; then
+    echo 󰍭
+fi
+
