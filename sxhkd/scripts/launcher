@@ -1,7 +1,0 @@
-#!/bin/bash
-
-rofi -no-lazy-grab \
--disable-history \
--show drun \
--font "Comic Mono 14" \
--theme ~/.config/rofi/launcher.rasi \

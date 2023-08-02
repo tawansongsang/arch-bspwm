@@ -39,6 +39,6 @@ feh --no-fehbg --bg-fill $HOME/.config/bspwm/wallpapers/snow_mountain.jpg
 
 pgrep -x thunar > /dev/null || thunar --daemon &
 pgrep -x flameshot > /dev/null || flameshot &
-pgrep -x emacs > /dev/null || emacs --daemon &
+#pgrep -x emacs > /dev/null || emacs --daemon &
 
 wmname LG3D

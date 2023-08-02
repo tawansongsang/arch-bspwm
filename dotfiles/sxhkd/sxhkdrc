@@ -39,6 +39,10 @@ Print
     flameshot gui -p $HOME/Pictures/Screenshots
 super + shift + Print
     flameshot full -p $HOME/Pictures/Screenshots
+    
+# Connect to 2 monitors
+super + p
+    $HOME/.config/sxhkd/scripts/monitor
 
 # Volume Control
 XF86AudioLowerVolume
@@ -47,6 +51,13 @@ XF86AudioRaiseVolume
     amixer set Master 1%+
 XF86AudioMute
     $HOME/.config/sxhkd/scripts/audio_toggle
+
+# Brightness Control
+# XF86MonBrightnessDown XF86MonBrightnessUp
+XF86MonBrightnessDown
+    brightnessctl set 1%-
+XF86MonBrightnessUp
+    brightnessctl set +1%
 
 # make sxhkd reload its configuration files:
 super + Escape

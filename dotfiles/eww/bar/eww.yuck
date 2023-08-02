@@ -4,6 +4,7 @@
 (defpoll clock_date :interval "10h" "date '+%d/%m'")
 (defpoll volume_percent :interval "3s" "amixer -D pipewire sget Master | rg 'Left:' | awk -F'[][]' '{ print $2 }' | tr -d '%'")
 (defpoll volume_status :interval "1s" "scripts/audio")
+(defpoll mic_status :interval "1s" "scripts/mic")
 (defpoll mic_percent :interval "3s" "amixer -D pipewire sget Capture | rg 'Left:' | awk -F'[][]' '{ print $2 }' | tr -d '%'")
 (defpoll brightness_percent :interval "5s" "brightnessctl -m -d intel_backlight | awk -F, '{ print $4 }' | tr -d '%'")
 (defpoll battery :interval "15s" "./scripts/battery --bat")
@@ -14,6 +15,7 @@
 (defpoll memory_free_mb :interval "2m" "scripts/mem-ad free")
 (defpoll calendar :interval "1s" "scripts/calendar")
 (defvar vol_reveal false)
+(defvar mic_reveal false)
 (defvar br_reveal false)
 (defvar wifi_rev false)
 (defvar time_rev false)
@@ -43,7 +45,6 @@
 			  :text ESSID_WLAN
 			  :orientation "h"
 			  )))))
-
 
 (defwidget workspaces []
   (literal :content workspace))
@@ -88,7 +89,7 @@
   (eventbox :onhover "${eww} update vol_reveal=true"
 			  :onhoverlost "${eww} update vol_reveal=false"
   (box :class "module-2" :space-evenly "false" :orientation "h" :spacing "3" 
-	(button   :onclick "scripts/pop audio"   :class "volume_icon" "${volume_status}")
+	(button   :onclick "amixer set Master toggle"   :class "volume_icon" "${volume_status}")
 	(revealer :transition "slideleft"
 			  :reveal vol_reveal
 			  :duration "350ms"
@@ -99,6 +100,22 @@
 			  :max 100
 			  :min 0
 			  :onchange "amixer -D pipewire sset Master {}%" )))))
+
+(defwidget mic []
+  (eventbox :onhover "${eww} update mic_reveal=true"
+			  :onhoverlost "${eww} update mic_reveal=false"
+  (box :class "module-2" :space-evenly "false" :orientation "h" :spacing "3" 
+	(button   :onclick "amixer set Capture toggle"   :class "mictab_icon" "${mic_status}")
+	(revealer :transition "slideleft"
+			  :reveal mic_reveal
+			  :duration "350ms"
+	(scale    :class "micbar"
+			  :value mic_percent
+			  :orientation "h"
+			  :tooltip "${mic_percent}%"
+			  :max 100
+			  :min 0
+			  :onchange "amixer -D pipewire sset Capture {}%" )))))
 
 (defwidget bright []
   (eventbox :onhover "${eww} update br_reveal=true" :onhoverlost "${eww} update br_reveal=false"
@@ -128,6 +145,7 @@
          :halign "end"
 		 :class "left_modules"
 (bright)
+(mic)
 (volume)
 (wifi)
 (sep)
@@ -245,45 +263,6 @@
 						:width "270px" 
 						:height "60px")
 (cal))
-
-
-
-(defwidget audio []
-	(box :class "audio-box" :orientation "v" :space-evenly "false" :vexpand "false" :hexpand "false"
-	(box :halign "v" :space-evenly "false" :hexpand "false" :vexpand "false"
-	(box :class "speaker_icon" :orientation "v")
-	(box :orientation "v" :halign "center" :vexpand "false" :hexpand "false"
-    (label :class "speaker_text" :text "speaker" :valign "center" :halign "left" )
-	(box :class "speaker_bar" :halign "center" :vexpand "false" :hexpand "false"
-	(scale    :value volume_percent
-              :space-evenly "false"
-			  :orientation "h"
-			  :onchange "amixer -D pipewire sset Master {}%" 
-              :tooltip "volume on ${volume_percent}%"
-			  :max 100
-			  :min 0))))
-            (label :text "" :class "audio_sep" :halign "center")
-	(box :halign "v" :space-evenly "false" :hexpand "false" :vexpand "false"
-	(box :class "mic_icon" :orientation "v")
-	(box :orientation "v" :halign "center" :vexpand "false" :hexpand "false"
-    (label :class "mic_text" :text "mic" :valign "center" :halign "left" )
-	(box :class "mic_bar" :halign "center" :vexpand "false" :hexpand "false"
-	(scale    :value mic_percent
-              :space-evenly "false"
-			  :orientation "h"
-              :tooltip "mic on ${mic_percent}%"
-			  :onchange "amixer -D pipewire sset Capture {}%" 
-			  :max 100
-			  :min 0))))))
-
-(defwindow audio_ctl
-	:geometry (geometry :x "-20px" 
-						:y "7%" 
-                        :anchor "top right"
-						:width "280px" 
-						:height "60px")
-(audio))
-
 
 (defwindow system
 	:geometry (geometry :x "-20px" 
