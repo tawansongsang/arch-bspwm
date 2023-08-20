@@ -5,7 +5,7 @@ NUM_MONITORS=$(xrandr -q | rg -w connected | wc -l)
 
 if [[ $NUM_MONITORS == 1 ]]; then
     echo $MONITORS
-    xrandr --output "$MONITORS" --primary --mode 1920x1080 --rate 48.01
+    xrandr --output "$MONITORS" --primary --mode 1920x1080 
     echo "reconfig workspace"
     bspc monitor "$MONITORS" -d 1 2 3 4 5 6 7 8 9
     echo "reload backgroud"
@@ -22,7 +22,7 @@ elif [[ $NUM_MONITORS == 2 ]]; then
     #echo "Enter resolution: "
     #read resolution
     echo "setting second monitor"
-    CMD="xrandr --output $MONITOR1 --primary --mode 1920x1080 --rate 48.01 --output $MONITOR2 --auto --right-of $MONITOR1"
+    CMD="xrandr --output $MONITOR1 --primary --mode 1920x1080 --output $MONITOR2 --auto --right-of $MONITOR1"
     echo $CMD
     bash -c "$CMD"
     echo "reconfig workspace"
